@@ -1,6 +1,27 @@
-from dict_to_markdown import dict_to_markdown
+#from dict_to_markdown import dict_to_markdown
+import pandas as pd
 import boto3
 
-ec2 = boto3.client("ec2")
+data = []
+profile=""
+
+session = boto3.session.Session(profile_name=profile)
+ec2 = session.client("ec2",region_name="ap-northeast-1")
 vpcs = ec2.describe_vpcs()['Vpcs']
-dict_to_markdown(vpcs[0], title="VPC", format="md")
+# for i in range(len(vpcs)):
+#     dict_to_markdown(vpcs[i], title="VPC", format="md")
+
+for vpc in vpcs:
+    # tags_filter = [t.get('Value') for t in vpc['Tags'] if t.get('Key') == "Name"]
+    # name = tags_filter[0] if tags_filter else ''
+    # Cidr 取得と buffer 格納
+    for assoc in vpc['CidrBlockAssociationSet']:
+        data.append([
+            vpc['VpcId'],
+            assoc['CidrBlock'],
+            vpc['InstanceTenancy'],
+            vpc['IsDefault']
+        ])
+
+df_vpcs = pd.DataFrame(data,  columns=["VpcId", "Cidr", "Tenancy", "IsDefault"])
+print(df_vpcs)

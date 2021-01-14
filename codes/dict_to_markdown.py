@@ -21,7 +21,7 @@ def dict_to_markdown(dc, title="TOP", depth=1, format="md"):
 
     #表示可能アイテムを表示
     if displayable:
-        print(pd.DataFrame(displayable,columns=["key", "value"]).to_markdown(showindex=False))
+        print(pd.DataFrame(displayable,columns=["key", "value"]).to_markdown(index=False))
 
     #表示不可能アイテムをパース
     for k, v in not_displayable:
