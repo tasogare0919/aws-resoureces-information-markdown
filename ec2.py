@@ -1,7 +1,7 @@
 from dict_to_md import dict_to_markdown
 import boto3
 
-profile="default"
+profile=""
 
 session = boto3.session.Session(profile_name=profile)
 ec2_client = session.client("ec2",region_name="ap-northeast-1")
